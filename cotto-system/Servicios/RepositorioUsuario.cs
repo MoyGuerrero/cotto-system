@@ -2,6 +2,9 @@
 using cotto_system.Modelos;
 using Dapper;
 using Microsoft.Data.SqlClient;
+using System.Data;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace cotto_system.Servicios
 {
@@ -16,22 +19,58 @@ namespace cotto_system.Servicios
 
         public async Task AddUsuario(AddUsuario usuario)
         {
-            var passHash = BCrypt.Net.BCrypt.HashPassword(usuario.Clave);
+            try
+            {
+                using var connection = new SqlConnection(connectionString);
 
-            usuario.Clave = passHash;
+                usuario.Clave = Encritptar(usuario.Clave);
 
-            using var connection = new SqlConnection(connectionString);
+                await connection.ExecuteAsync("sp_InsertarUsuario", usuario, commandType: System.Data.CommandType.StoredProcedure);
 
-            await connection.ExecuteAsync("INSERT INTO Usuarios (Nombre, Usuario,Clave,Tipo,ClaveAutorizacion,Estatus) VALUES (@Nombre,@Usuario,@Clave,@Tipo,@ClaveAutorizacion,@Estatus)", usuario);
+            }
+            catch (Exception ex)
+            {
+
+                throw new Exception(ex.Message);
+            }
+
         }
 
 
-        public async Task<AddUsuario> Login(string usuario)
+        public async Task<GetUsuario> Login(string Usuario)
         {
-            using var connection = new SqlConnection(connectionString);
+            try
+            {
+                using var connection = new SqlConnection(connectionString);
 
-            return await connection.QueryFirstOrDefaultAsync<AddUsuario>("SELECT * FROM Usuarios WHERE Usuario = @Usuario", new { usuario });
+                return await connection.QueryFirstOrDefaultAsync<GetUsuario>("Sp_ConsultaUsuario", new { Usuario = Usuario }, commandType: System.Data.CommandType.StoredProcedure);
 
+            }
+            catch (Exception ex)
+            {
+
+                throw new Exception(ex.Message);
+            }
+
+
+        }
+
+
+        public string Encritptar(string password)
+        {
+            using (SHA512 cifrador = SHA512.Create())
+            {
+                byte[] claveOriginal = Encoding.UTF8.GetBytes(password);
+                byte[] claveCifrada = cifrador.ComputeHash(claveOriginal);
+                return Convert.ToBase64String(claveCifrada);
+            }
+        }
+
+        public bool verifyPassword(string hashPassword, string password)
+        {
+            if (hashPassword == Encritptar(password)) return true;
+
+            return false;
         }
 
 

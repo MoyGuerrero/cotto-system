@@ -1,6 +1,12 @@
 ﻿using cotto_system.interfaces;
 using cotto_system.Modelos;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 
 namespace cotto_system.Controllers
 {
@@ -9,20 +15,21 @@ namespace cotto_system.Controllers
     public class UsuarioController : ControllerBase
     {
         private readonly IRepositorioUsuario repositorioUsuario;
+        private readonly IConfiguration configuration;
 
-        public UsuarioController(IRepositorioUsuario repositorioUsuario)
+        public UsuarioController(IRepositorioUsuario repositorioUsuario, IConfiguration configuration)
         {
             this.repositorioUsuario = repositorioUsuario;
+            this.configuration = configuration;
         }
 
         [HttpPost]
-        //[Route("/")]
+        [Route("agregar_usuario")]
         public async Task<IActionResult> AddUsuario([FromBody] AddUsuario usuario)
         {
             await repositorioUsuario.AddUsuario(usuario);
             return Ok(new
             {
-                error = false,
                 msg = "Usuario registrado con exito."
             });
         }
@@ -31,35 +38,64 @@ namespace cotto_system.Controllers
         [Route("login")]
         public async Task<IActionResult> Login(Login login)
         {
-            var usuario = await repositorioUsuario.Login(login.Usuario);
+            var usuarioBd = await repositorioUsuario.Login(login.Usuario);
 
-            if (usuario is null)
+            if (usuarioBd.Validacion == 0)
             {
-                return BadRequest(new
+                return NotFound(new
                 {
-                    ok = true,
-                    msg = "El usuario no es existe"
+                    msg = "El usuario " + login.Usuario + " no exite"
                 });
             }
 
 
-            var isCorrect = BCrypt.Net.BCrypt.Verify(login.Clave, usuario.Clave);
-
-            if (!isCorrect)
+            if (!repositorioUsuario.verifyPassword(usuarioBd.Clave, login.Clave))
             {
                 return BadRequest(new
                 {
-                    ok = true,
-                    msg = "Credenciales son incorrectas"
+                    msg = "Las credenciales no son correctas"
                 });
             }
 
             return Ok(new
             {
-                ok = false,
-                msg = "Acceso concedido",
-                token = "Aqui ira el token"
+                usuarioBd,
+                token = Token(usuarioBd)
             });
+        }
+
+        [HttpGet]
+        [Route("renewToken")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<IActionResult> RenovarToken()
+        {
+            var usuarioClaim = HttpContext.User.Claims.Where(claim => claim.Type == "usuario").FirstOrDefault();
+
+
+          var usuarioBD =  await repositorioUsuario.Login(usuarioClaim.Value);
+
+            return Ok(new
+            {
+                token = Token(usuarioBD),
+                usuarioBD
+            });
+
+
+        }
+        private string Token(GetUsuario usuario)
+        {
+
+            var claims = new List<Claim>() {
+            new Claim("usuario",usuario.Usuario)
+            };
+
+            var llaveSecret = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["JWT"]));
+            var creds = new SigningCredentials(llaveSecret, SecurityAlgorithms.HmacSha256);
+
+            var expiracion = DateTime.UtcNow.AddMinutes(30);
+
+            var token = new JwtSecurityToken(issuer: null, audience: null, claims: claims, expires: expiracion, signingCredentials: creds);
+            return new JwtSecurityTokenHandler().WriteToken(token);
         }
     }
 }
