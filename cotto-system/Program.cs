@@ -7,14 +7,6 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
-// Configurar Kestrel para aceptar HTTP y HTTPS
-builder.WebHost.ConfigureKestrel(options =>
-{
-    options.ListenAnyIP(7255); // Puerto HTTP
-    options.ListenAnyIP(7256, listenOptions => listenOptions.UseHttps()); // Puerto HTTPS
-});
-
 // Add services to the container.
 
 builder.Services.AddControllers();
