@@ -72,12 +72,12 @@ namespace cotto_system.Controllers
             var usuarioClaim = HttpContext.User.Claims.Where(claim => claim.Type == "usuario").FirstOrDefault();
 
 
-          var usuarioBD =  await repositorioUsuario.Login(usuarioClaim.Value);
+          var usuarioBd =  await repositorioUsuario.Login(usuarioClaim.Value);
 
             return Ok(new
             {
-                token = Token(usuarioBD),
-                usuarioBD
+                token = Token(usuarioBd),
+                usuarioBd
             });
 
 

@@ -15,11 +15,11 @@ COPY ["cotto-system/cotto-system.csproj", "cotto-system/"]
 RUN dotnet restore "./cotto-system/cotto-system.csproj"
 COPY . .
 WORKDIR "/src/cotto-system"
-RUN dotnet build "./cotto-system.csproj" -c %BUILD_CONFIGURATION% -o /app/build
+RUN dotnet build "./cotto-system.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./cotto-system.csproj" -c %BUILD_CONFIGURATION% -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "./cotto-system.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
