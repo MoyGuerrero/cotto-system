@@ -43,7 +43,7 @@ namespace cotto_system.Servicios
             {
                 using var connection = new SqlConnection(connectionString);
 
-                return await connection.QueryFirstOrDefaultAsync<GetUsuario>("Sp_ConsultaUsuario", new { Usuario = Usuario }, commandType: System.Data.CommandType.StoredProcedure);
+                return await connection.QueryFirstOrDefaultAsync<GetUsuario>("Sp_ConsultaUsuario", new { Usuario }, commandType: System.Data.CommandType.StoredProcedure);
 
             }
             catch (Exception ex)

@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
+using System.Net;
 using System.Security.Claims;
 using System.Text;
 
@@ -27,41 +28,46 @@ namespace cotto_system.Controllers
         [Route("agregar_usuario")]
         public async Task<IActionResult> AddUsuario([FromBody] AddUsuario usuario)
         {
-            await repositorioUsuario.AddUsuario(usuario);
-            return Ok(new
+            try
             {
-                msg = "Usuario registrado con exito."
-            });
+                await repositorioUsuario.AddUsuario(usuario);
+                return Ok(new ResponseData<object>(true, "Cliente agregado con éxito.", (int)HttpStatusCode.OK, new { }, ""));
+            }
+            catch (Exception ex)
+            {
+
+                return StatusCode((int)HttpStatusCode.InternalServerError, new ResponseData<object>(false, ex.Message, (int)HttpStatusCode.InternalServerError, new { }, ""));
+            }
+
         }
 
         [HttpPost]
         [Route("login")]
         public async Task<IActionResult> Login(Login login)
         {
-            var usuarioBd = await repositorioUsuario.Login(login.Usuario);
-
-            if (usuarioBd.Validacion == 0)
+            try
             {
-                return NotFound(new
+                var usuarioBd = await repositorioUsuario.Login(login.Usuario);
+
+                if (usuarioBd.Validacion == 0)
                 {
-                    msg = "El usuario " + login.Usuario + " no exite"
-                });
+                    return NotFound(new ResponseData<object>(false, "El usuario no existe.", (int)HttpStatusCode.NotFound, new { }, ""));
+                }
+
+
+                if (!repositorioUsuario.verifyPassword(usuarioBd.Clave, login.Clave))
+                {
+                    return BadRequest(new ResponseData<object>(false, "Las credenciales son incorrectas.", (int)HttpStatusCode.BadRequest, new { }, ""));
+                }
+
+                return Ok(new ResponseData<object>(true, "Bienvenido.", (int)HttpStatusCode.OK, usuarioBd, Token(usuarioBd)));
+            }
+            catch (Exception ex)
+            {
+
+                return StatusCode((int)HttpStatusCode.InternalServerError, new ResponseData<object>(false, ex.Message, (int)HttpStatusCode.InternalServerError, null, ""));
             }
 
-
-            if (!repositorioUsuario.verifyPassword(usuarioBd.Clave, login.Clave))
-            {
-                return BadRequest(new
-                {
-                    msg = "Las credenciales no son correctas"
-                });
-            }
-
-            return Ok(new
-            {
-                usuarioBd,
-                token = Token(usuarioBd)
-            });
         }
 
         [HttpGet]
@@ -72,7 +78,7 @@ namespace cotto_system.Controllers
             var usuarioClaim = HttpContext.User.Claims.Where(claim => claim.Type == "usuario").FirstOrDefault();
 
 
-          var usuarioBd =  await repositorioUsuario.Login(usuarioClaim.Value);
+            var usuarioBd = await repositorioUsuario.Login(usuarioClaim.Value);
 
             return Ok(new
             {
