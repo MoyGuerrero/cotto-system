@@ -36,7 +36,7 @@ namespace cotto_system.Controllers
             catch (Exception ex)
             {
 
-                return StatusCode((int)HttpStatusCode.InternalServerError, new ResponseData<object>(false, ex.Message, (int)HttpStatusCode.InternalServerError, new { }, ""));
+                return StatusCode((int)HttpStatusCode.InternalServerError, new Success(false, ex.Message, (int)HttpStatusCode.InternalServerError));
             }
 
         }
@@ -65,7 +65,7 @@ namespace cotto_system.Controllers
             catch (Exception ex)
             {
 
-                return StatusCode((int)HttpStatusCode.InternalServerError, new ResponseData<object>(false, ex.Message, (int)HttpStatusCode.InternalServerError, null, ""));
+                return StatusCode((int)HttpStatusCode.InternalServerError, new Success(false, ex.Message, (int)HttpStatusCode.InternalServerError));
             }
 
         }
@@ -75,16 +75,22 @@ namespace cotto_system.Controllers
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> RenovarToken()
         {
-            var usuarioClaim = HttpContext.User.Claims.Where(claim => claim.Type == "usuario").FirstOrDefault();
 
-
-            var usuarioBd = await repositorioUsuario.Login(usuarioClaim.Value);
-
-            return Ok(new
+            try
             {
-                token = Token(usuarioBd),
-                usuarioBd
-            });
+                var usuarioClaim = HttpContext.User.Claims.Where(claim => claim.Type == "usuario").FirstOrDefault();
+
+
+                var usuarioBd = await repositorioUsuario.Login(usuarioClaim.Value);
+
+                return Ok(new ResponseData<object>(true, "Success", (int)HttpStatusCode.OK, usuarioBd, Token(usuarioBd)));
+            }
+            catch (Exception ex)
+            {
+
+                return StatusCode((int)HttpStatusCode.InternalServerError, new Success(false, ex.Message, (int)HttpStatusCode.InternalServerError));
+            }
+
 
 
         }

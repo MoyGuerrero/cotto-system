@@ -61,7 +61,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
             context.HandleResponse();
             context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
             context.Response.ContentType = "application/json";
-            return context.Response.WriteAsJsonAsync(new Success<object>(false, "No tiene permisos o token no valido", (int)HttpStatusCode.Unauthorized));
+            return context.Response.WriteAsJsonAsync(new Success(false, "No tiene permisos o token no valido", (int)HttpStatusCode.Unauthorized));
         }
     };
 });

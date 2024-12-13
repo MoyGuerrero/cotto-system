@@ -19,7 +19,7 @@
     }
 
 
-    public class Success<TData>
+    public class Success
     {
         public Boolean Ok { get; set; }
         public string Message { get; set; }

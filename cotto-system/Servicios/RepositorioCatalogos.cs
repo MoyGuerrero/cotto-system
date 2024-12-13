@@ -31,5 +31,12 @@ namespace cotto_system.Servicios
             return await connection.QueryAsync<getGradosCalificacion>("pa_consultagradosclasificacion", commandType: System.Data.CommandType.StoredProcedure);
         }
 
+        public async Task<IEnumerable<GetClases>> getClases()
+        {
+            using var connection = new SqlConnection(dbConnectionString);
+
+            return await connection.QueryAsync<GetClases>("pa_consultaclasesclasificacion", commandType: System.Data.CommandType.StoredProcedure);
+        }
+
     }
 }

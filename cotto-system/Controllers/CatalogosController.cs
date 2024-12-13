@@ -11,11 +11,11 @@ namespace cotto_system.Controllers
     [Route("api/catalogos")]
     public class CatalogosController : Controller
     {
-        private readonly IRepositorioCatalogos repositorioClientes;
+        private readonly IRepositorioCatalogos repositorioCatalogos;
 
         public CatalogosController(IRepositorioCatalogos repositorioClientes)
         {
-            this.repositorioClientes = repositorioClientes;
+            this.repositorioCatalogos = repositorioClientes;
         }
 
 
@@ -26,29 +26,45 @@ namespace cotto_system.Controllers
         {
             try
             {
-                await repositorioClientes.addClient(clientes);
+                await repositorioCatalogos.addClient(clientes);
 
-                return Ok(new Success<object>(true, "Cliente agregado con éxito.", (int)HttpStatusCode.OK));
+                return Ok(new Success(true, "Cliente agregado con éxito.", (int)HttpStatusCode.OK));
             }
             catch (Exception ex)
             {
-                return StatusCode((int)HttpStatusCode.InternalServerError, new Success<Object>(true, ex.Message, (int)HttpStatusCode.InternalServerError));
+                return StatusCode((int)HttpStatusCode.InternalServerError, new Success(true, ex.Message, (int)HttpStatusCode.InternalServerError));
             }
         }
 
         [HttpGet]
         [Route("grados_clasificacion")]
-        //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> GetGradosClasificacion()
         {
             try
             {
-                var grados_clasificacion = await repositorioClientes.getGradosClasificacion();
+                var grados_clasificacion = await repositorioCatalogos.getGradosClasificacion();
                 return Ok(new SuccessWithData<object>(true, "Datos de obtenidos con éxito.", (int)HttpStatusCode.OK, grados_clasificacion));
             }
             catch (Exception ex)
             {
-                return StatusCode((int)HttpStatusCode.InternalServerError, new Success<object>(false, ex.Message, (int)HttpStatusCode.InternalServerError));
+                return StatusCode((int)HttpStatusCode.InternalServerError, new Success(false, ex.Message, (int)HttpStatusCode.InternalServerError));
+            }
+        }
+
+        [HttpGet]
+        [Route("clases")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<IActionResult> GetClases()
+        {
+            try
+            {
+                var clases = await repositorioCatalogos.getClases();
+                return Ok(new SuccessWithData<object>(true, "Success", (int)HttpStatusCode.OK, clases));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode((int)HttpStatusCode.InternalServerError, new Success(false, ex.Message, (int)HttpStatusCode.InternalServerError));
             }
         }
     }
