@@ -1,8 +1,10 @@
 using cotto_system.interfaces;
+using cotto_system.Modelos;
 using cotto_system.Servicios;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using System.Net;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -51,8 +53,20 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
         ValidateIssuerSigningKey = false,
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT"]))
     };
+
+    options.Events = new JwtBearerEvents
+    {
+        OnChallenge = context =>
+        {
+            context.HandleResponse();
+            context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+            context.Response.ContentType = "application/json";
+            return context.Response.WriteAsJsonAsync(new Success<object>(false, "No tiene permisos o token no valido", (int)HttpStatusCode.Unauthorized));
+        }
+    };
 });
 builder.Services.AddTransient<IRepositorioUsuario, RepositorioUsuario>();
+builder.Services.AddTransient<IRepositorioCatalogos, RepositorioCatalogos>();
 
 builder.Services.AddCors(options =>
 {
