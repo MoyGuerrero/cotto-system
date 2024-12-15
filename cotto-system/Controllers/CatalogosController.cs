@@ -67,5 +67,75 @@ namespace cotto_system.Controllers
                 return StatusCode((int)HttpStatusCode.InternalServerError, new Success(false, ex.Message, (int)HttpStatusCode.InternalServerError));
             }
         }
+
+        [HttpGet]
+        [Route("perfilventaenc")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<IActionResult> GetPerfilVentaEnc()
+        {
+            try
+            {
+                var perfilventaenc = await repositorioCatalogos.getPerfilVentaEnc();
+                return Ok(new SuccessWithData<object>(true, "Success", (int)HttpStatusCode.OK, perfilventaenc));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode((int)HttpStatusCode.InternalServerError, new Success(false, ex.Message, (int)HttpStatusCode.InternalServerError));
+            }
+        }
+
+        [HttpGet]
+        [Route("perfilventadet/{idperfilenc:int}")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<IActionResult> GetPerfilVentaDet(int idperfilenc)
+        {
+            try
+            {
+                if (idperfilenc < 0)
+                {
+                    return BadRequest(new Success(false, "Error en la ruta, favor verificarla.", (int)HttpStatusCode.BadRequest));
+                }
+
+                var perfilventadet = await repositorioCatalogos.getPerfilVentaDet(idperfilenc);
+                return Ok(new SuccessWithData<object>(true, "Sucess", (int)HttpStatusCode.OK, perfilventadet));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode((int)HttpStatusCode.InternalServerError, new Success(false, ex.Message, (int)HttpStatusCode.InternalServerError));
+            }
+        }
+
+        [HttpGet]
+        [Route("unidad_venta")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<IActionResult> GetUnidadVenta()
+        {
+            try
+            {
+                var unidadVenta = await repositorioCatalogos.getUnidadVenta();
+                return Ok(new SuccessWithData<object>(true, "Success", (int)HttpStatusCode.OK, unidadVenta));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode((int)HttpStatusCode.InternalServerError, new Success(false, ex.Message, (int)HttpStatusCode.InternalServerError));
+            }
+        }
+
+        [HttpPost]
+        [Route("agregar_unidad_venta")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<IActionResult> AddUnidadVenta(AddVentaUnidad addVentaUnidad)
+        {
+            try
+            {
+                var id = await repositorioCatalogos.AddValorUnidad(addVentaUnidad);
+
+                return Ok(new Success(true, $"La unidad {id} se ha agregado con éxito.", (int)HttpStatusCode.OK));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode((int)HttpStatusCode.InternalServerError, new Success(false, ex.Message, (int)HttpStatusCode.InternalServerError));
+            }
+        }
     }
 }
