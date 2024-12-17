@@ -15,8 +15,6 @@ namespace cotto_system.Servicios
             dbConnectionString = configuration.GetConnectionString("calculacott");
         }
 
-
-
         public async Task addClient(Clientes clientes)
         {
             using var connection = new SqlConnection(dbConnectionString);

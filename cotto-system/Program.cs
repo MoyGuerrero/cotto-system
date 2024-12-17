@@ -67,6 +67,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
 });
 builder.Services.AddTransient<IRepositorioUsuario, RepositorioUsuario>();
 builder.Services.AddTransient<IRepositorioCatalogos, RepositorioCatalogos>();
+builder.Services.AddTransient<IRepositorioComercializacion, RepositorioComercializacion>();
 
 builder.Services.AddCors(options =>
 {
