@@ -32,18 +32,34 @@
         }
     }
 
-    public class SuccessWithData <TData>
+    public class SuccessWithData<TData>
     {
         public Boolean Ok { get; set; }
         public string Message { get; set; }
         public int StatusCode { get; set; }
         public TData Data { get; set; }
-        public SuccessWithData(Boolean ok, string message, int statusCode,TData data)
+        public SuccessWithData(Boolean ok, string message, int statusCode, TData data)
         {
             Ok = ok;
             Message = message;
             StatusCode = statusCode;
             Data = data;
+        }
+    }
+
+    public class SuccessWithID
+    {
+        public Boolean Ok { get; set; }
+        public string Message { get; set; }
+        public int StatusCode { get; set; }
+        public int ID { get; set; }
+
+        public SuccessWithID(Boolean ok, string message, int statuscode, int id)
+        {
+            Ok = ok;
+            Message = message;
+            StatusCode = statuscode;
+            ID = id;
         }
     }
 }

@@ -137,5 +137,40 @@ namespace cotto_system.Controllers
                 return StatusCode((int)HttpStatusCode.InternalServerError, new Success(false, ex.Message, (int)HttpStatusCode.InternalServerError));
             }
         }
+
+
+        [HttpPost]
+        [Route("agregar_perfil_venta_enc")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<IActionResult> AddPerfilVentaEnc(AddPerfilVentaEnc addPerfilVentaEnc)
+        {
+            try
+            {
+                var id = await repositorioCatalogos.AddPerfilVentaEnc(addPerfilVentaEnc);
+
+                return Ok(new SuccessWithID(true, $"El perfil con el ID {id} se ha agregado con éxito.", (int)HttpStatusCode.OK, id));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode((int)HttpStatusCode.InternalServerError, new Success(false, ex.Message, (int)HttpStatusCode.InternalServerError));
+            }
+        }
+
+        [HttpPost]
+        [Route("agregar_perfil_venta_det")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<IActionResult> AddPerfilVentaDet(List<AddPerfilVentaDet> addPerfilVentaDets)
+        {
+            try
+            {
+                var ids = await repositorioCatalogos.AddPerfilVentaDet(addPerfilVentaDets);
+
+                return Ok(new Success(true, $"Success", (int)HttpStatusCode.OK));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode((int)HttpStatusCode.InternalServerError, new Success(false, ex.Message, (int)HttpStatusCode.InternalServerError));
+            }
+        }
     }
 }

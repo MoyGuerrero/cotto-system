@@ -76,5 +76,45 @@ namespace cotto_system.Servicios
             return parameters.Get<int>("@idperfilenc");
         }
 
+        public async Task<int> AddPerfilVentaEnc(AddPerfilVentaEnc addPerfilVentaEnc)
+        {
+            using var connection = new SqlConnection(dbConnectionString);
+
+            var parameters = new DynamicParameters();
+
+            parameters.Add("@idperfilenc", addPerfilVentaEnc.idperfilenc, dbType: DbType.Int32, direction: ParameterDirection.InputOutput);
+            parameters.Add("@descripcion", addPerfilVentaEnc.descripcion);
+            parameters.Add("@idestatus", addPerfilVentaEnc.idestatus);
+            parameters.Add("@fechacreacion", addPerfilVentaEnc.fechacreacion);
+            parameters.Add("@fechaactualizacion", addPerfilVentaEnc.fechaactualizacion);
+
+            //parameters.Add("@idperfilenc", dbType: DbType.Int32, direction: ParameterDirection.Output);
+
+            await connection.ExecuteAsync("pa_insertaperfilventaenc", parameters, commandType: System.Data.CommandType.StoredProcedure);
+
+            return parameters.Get<int>("@idperfilenc");
+        }
+
+        public async Task<List<int>> AddPerfilVentaDet(List<AddPerfilVentaDet> addPerfilVentaDets)
+        {
+            List<int> Id = new List<int>();
+
+            for (int i = 0; i < addPerfilVentaDets.Count; i++)
+            {
+                using var connection = new SqlConnection(dbConnectionString);
+                var parameters = new DynamicParameters();
+                parameters.Add("@idperfildet", addPerfilVentaDets[i].idperfildet);
+                parameters.Add("@idperfilenc", addPerfilVentaDets[i].idperfilenc);
+                parameters.Add("@idclasesenc", addPerfilVentaDets[i].idclasesenc);
+                parameters.Add("@diferencial", addPerfilVentaDets[i].diferencial);
+
+                parameters.Add("@idperfilenc", dbType: DbType.Int32, direction: ParameterDirection.Output);
+
+                await connection.ExecuteAsync("pa_insertaperfiluniventaenc", parameters, commandType: System.Data.CommandType.StoredProcedure);
+                Id.Add(parameters.Get<int>("@idperfilenc"));
+            }
+            return Id;
+        }
+
     }
 }
