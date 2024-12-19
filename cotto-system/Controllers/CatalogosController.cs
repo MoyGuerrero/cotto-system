@@ -12,10 +12,12 @@ namespace cotto_system.Controllers
     public class CatalogosController : Controller
     {
         private readonly IRepositorioCatalogos repositorioCatalogos;
+        private readonly IWebHostEnvironment env;
 
-        public CatalogosController(IRepositorioCatalogos repositorioClientes)
+        public CatalogosController(IRepositorioCatalogos repositorioClientes, IWebHostEnvironment env)
         {
             this.repositorioCatalogos = repositorioClientes;
+            this.env = env;
         }
 
 
@@ -166,6 +168,30 @@ namespace cotto_system.Controllers
                 var ids = await repositorioCatalogos.AddPerfilVentaDet(addPerfilVentaDets);
 
                 return Ok(new Success(true, $"Success", (int)HttpStatusCode.OK));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode((int)HttpStatusCode.InternalServerError, new Success(false, ex.Message, (int)HttpStatusCode.InternalServerError));
+            }
+        }
+
+        [HttpGet]
+        [Route("descargar_plantilla_gc")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public IActionResult Download()
+        {
+            try
+            {
+                string filePath = Path.Combine(env.ContentRootPath, "Plantillas", "plantilla_carga_gradosclasif.xltx");
+                if (!System.IO.File.Exists(filePath))
+                {
+                    return NotFound(new Success(false, filePath, (int)HttpStatusCode.NotFound));
+                }
+
+                byte[] fileByte = System.IO.File.ReadAllBytes(filePath);
+
+
+                return File(fileByte, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "plantilla_carga_gradosclasif.xltx");
             }
             catch (Exception ex)
             {

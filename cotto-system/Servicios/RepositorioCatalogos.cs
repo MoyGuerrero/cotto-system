@@ -108,9 +108,9 @@ namespace cotto_system.Servicios
                 parameters.Add("@idclasesenc", addPerfilVentaDets[i].idclasesenc);
                 parameters.Add("@diferencial", addPerfilVentaDets[i].diferencial);
 
-                parameters.Add("@idperfilenc", dbType: DbType.Int32, direction: ParameterDirection.Output);
+                //parameters.Add("@idperfilenc", dbType: DbType.Int32, direction: ParameterDirection.Output);
 
-                await connection.ExecuteAsync("pa_insertaperfiluniventaenc", parameters, commandType: System.Data.CommandType.StoredProcedure);
+                await connection.ExecuteAsync("pa_insertaperfilventadet", parameters, commandType: System.Data.CommandType.StoredProcedure);
                 Id.Add(parameters.Get<int>("@idperfilenc"));
             }
             return Id;
