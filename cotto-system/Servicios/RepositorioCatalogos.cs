@@ -22,6 +22,12 @@ namespace cotto_system.Servicios
             await connection.ExecuteAsync("Pa_InsertaCliente", clientes, commandType: System.Data.CommandType.StoredProcedure);
         }
 
+        public async Task addProveedor(Proveedor proveedor)
+        {
+            using var connection = new SqlConnection(dbConnectionString);
+            await connection.ExecuteAsync("Pa_Insertacomprador", proveedor, commandType: System.Data.CommandType.StoredProcedure);
+        }
+
         public async Task<IEnumerable<getGradosCalificacion>> getGradosClasificacion()
         {
             using var connection = new SqlConnection(dbConnectionString);
@@ -114,6 +120,21 @@ namespace cotto_system.Servicios
                 Id.Add(parameters.Get<int>("@idperfilenc"));
             }
             return Id;
+        }
+
+
+        public async Task<IEnumerable<Clientes>> GetClientes(int idcliente, string nombre)
+        {
+            using var connection = new SqlConnection(dbConnectionString);
+
+            return await connection.QueryAsync<Clientes>("pa_consultacliente", new { idcliente, nombre }, commandType: System.Data.CommandType.StoredProcedure);
+        }
+
+        public async Task<IEnumerable<Clientes>> GetProveedor(int Idcomprador, string nombre)
+        {
+            using var connection = new SqlConnection(dbConnectionString);
+
+            return await connection.QueryAsync<Clientes>("pa_consultacomprador", new { Idcomprador, nombre }, commandType: System.Data.CommandType.StoredProcedure);
         }
 
     }

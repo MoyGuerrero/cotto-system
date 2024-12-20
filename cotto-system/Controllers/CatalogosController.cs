@@ -38,6 +38,23 @@ namespace cotto_system.Controllers
             }
         }
 
+        [HttpPost]
+        [Route("agregar_proveedor")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<IActionResult> PostProveedor(Proveedor proveedor)
+        {
+            try
+            {
+                await repositorioCatalogos.addProveedor(proveedor);
+
+                return Ok(new Success(true, $"El proveedor {proveedor.nombre } se agregado con éxito.", (int)HttpStatusCode.OK));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode((int)HttpStatusCode.InternalServerError, new Success(true, ex.Message, (int)HttpStatusCode.InternalServerError));
+            }
+        }
+
         [HttpGet]
         [Route("grados_clasificacion")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
@@ -185,13 +202,57 @@ namespace cotto_system.Controllers
                 string filePath = Path.Combine(env.ContentRootPath, "Plantillas", "plantilla_carga_gradosclasif.xltx");
                 if (!System.IO.File.Exists(filePath))
                 {
-                    return NotFound(new Success(false, filePath, (int)HttpStatusCode.NotFound));
+                    return NotFound(new Success(false, $"El archivo plantilla_carga_gradosclasif no fue encontrado.", (int)HttpStatusCode.NotFound));
                 }
 
                 byte[] fileByte = System.IO.File.ReadAllBytes(filePath);
 
 
                 return File(fileByte, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "plantilla_carga_gradosclasif.xltx");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode((int)HttpStatusCode.InternalServerError, new Success(false, ex.Message, (int)HttpStatusCode.InternalServerError));
+            }
+        }
+
+        [HttpGet]
+        [Route("getClientes/{idcliente:int}/{nombre}")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<IActionResult> GetClientes(int idcliente, string nombre)
+        {
+            try
+            {
+                var clientes = await repositorioCatalogos.GetClientes(idcliente, nombre);
+
+                if (clientes is null)
+                {
+                    return NotFound(new Success(false, "El cliente no existe.", (int)HttpStatusCode.NotFound));
+                }
+
+                return Ok(new SuccessWithData<object>(true, "Success", (int)HttpStatusCode.OK, clientes));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode((int)HttpStatusCode.InternalServerError, new Success(false, ex.Message, (int)HttpStatusCode.InternalServerError));
+            }
+        }
+
+        [HttpGet]
+        [Route("getProveedor/{Idcomprador:int}/{nombre}")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<IActionResult> GetProveedor(int Idcomprador, string nombre)
+        {
+            try
+            {
+                var clientes = await repositorioCatalogos.GetProveedor(Idcomprador, nombre);
+
+                if (clientes is null)
+                {
+                    return NotFound(new Success(false, "El proveedor no existe.", (int)HttpStatusCode.NotFound));
+                }
+
+                return Ok(new SuccessWithData<object>(true, "Success", (int)HttpStatusCode.OK, clientes));
             }
             catch (Exception ex)
             {
