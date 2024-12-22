@@ -4,7 +4,9 @@ namespace cotto_system.interfaces
 {
     public interface IRepositorioCatalogos
     {
+        Task<int> addClases(AddClases addClases);
         Task addClient(Clientes clientes);
+        Task<int> addGradosClasificacion(AddGradosCalificacion addGradosCalificacion);
         Task<List<int>> AddPerfilVentaDet(List<AddPerfilVentaDet> addPerfilVentaDets);
         Task<int> AddPerfilVentaEnc(AddPerfilVentaEnc addPerfilVentaEnc);
         Task addProveedor(Proveedor proveedor);

@@ -47,12 +47,49 @@ namespace cotto_system.Controllers
             {
                 await repositorioCatalogos.addProveedor(proveedor);
 
-                return Ok(new Success(true, $"El proveedor {proveedor.nombre } se agregado con éxito.", (int)HttpStatusCode.OK));
+                return Ok(new Success(true, $"El proveedor {proveedor.nombre} se agregado con éxito.", (int)HttpStatusCode.OK));
             }
             catch (Exception ex)
             {
                 return StatusCode((int)HttpStatusCode.InternalServerError, new Success(true, ex.Message, (int)HttpStatusCode.InternalServerError));
             }
+        }
+
+        [HttpPost]
+        [Route("agregar_grados_clasificacion")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<IActionResult> PostGradosClasificacion(AddGradosCalificacion addGradosCalificacion)
+        {
+            try
+            {
+                var id = await repositorioCatalogos.addGradosClasificacion(addGradosCalificacion);
+
+                if (id == addGradosCalificacion.Idgradosclasificacion)
+                {
+                    return Ok(new Success(true, $"El dato con el id {id} se ha actualizado con éxito.", (int)HttpStatusCode.OK));
+                }
+
+                return Ok(new Success(true, $"El dato con el id {id} se ha agregado con éxito.", (int)HttpStatusCode.OK));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode((int)HttpStatusCode.InternalServerError, new Success(false, ex.Message, (int)HttpStatusCode.InternalServerError));
+            }
+        }
+
+        [HttpPost]
+        [Route("agregar_clase")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<IActionResult> AddClase(AddClases addClases)
+        {
+            var id = await repositorioCatalogos.addClases(addClases);
+
+            if (addClases.idclasesenc == id)
+            {
+                return Ok(new Success(true, $"El dato con el id {id} se ha actualizado con éxito.", (int)HttpStatusCode.OK));
+            }
+
+            return Ok(new Success(true, $"El dato con el id {id} se ha agregado con éxito.", (int)HttpStatusCode.OK));
         }
 
         [HttpGet]

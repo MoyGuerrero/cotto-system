@@ -28,6 +28,39 @@ namespace cotto_system.Servicios
             await connection.ExecuteAsync("Pa_Insertacomprador", proveedor, commandType: System.Data.CommandType.StoredProcedure);
         }
 
+        public async Task<int> addGradosClasificacion(AddGradosCalificacion addGradosCalificacion)
+        {
+            using var connection = new SqlConnection(dbConnectionString);
+
+            var parameters = new DynamicParameters();
+
+            parameters.Add("@Idgradosclasificacion", addGradosCalificacion.Idgradosclasificacion, dbType: DbType.Int32, direction: ParameterDirection.InputOutput);
+            parameters.Add("@gradocolor", addGradosCalificacion.gradocolor);
+            parameters.Add("@trashid", addGradosCalificacion.trashid);
+            parameters.Add("@descripcion", addGradosCalificacion.descripcion);
+            parameters.Add("@idclase", addGradosCalificacion.idclase);
+
+            await connection.ExecuteAsync("Pa_Insertagradosclasificacion", parameters, commandType: System.Data.CommandType.StoredProcedure);
+
+            return parameters.Get<int>("@Idgradosclasificacion");
+        }
+
+        public async Task<int> addClases(AddClases addClases)
+        {
+            using var connection = new SqlConnection(dbConnectionString);
+
+            var parameters = new DynamicParameters();
+
+            parameters.Add("@idclasesenc", addClases.idclasesenc, dbType: DbType.Int32, direction: ParameterDirection.InputOutput);
+            parameters.Add("@idclasificacion", addClases.idclasificacion);
+            parameters.Add("@clave", addClases.clave);
+            parameters.Add("@Descripcion", addClases.Descripcion);
+
+            await connection.ExecuteAsync("Pa_Insertaclasesclasificacion", parameters, commandType: System.Data.CommandType.StoredProcedure);
+
+            return parameters.Get<int>("@idclasesenc");
+        }
+
         public async Task<IEnumerable<getGradosCalificacion>> getGradosClasificacion()
         {
             using var connection = new SqlConnection(dbConnectionString);
