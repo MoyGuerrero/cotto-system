@@ -1,4 +1,4 @@
-﻿using cotto_system.Modelos;
+﻿using cotto_system.Modelos.CatalogoModelo;
 
 namespace cotto_system.interfaces
 {

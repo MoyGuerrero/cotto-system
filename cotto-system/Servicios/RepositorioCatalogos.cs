@@ -1,5 +1,5 @@
 ﻿using cotto_system.interfaces;
-using cotto_system.Modelos;
+using cotto_system.Modelos.CatalogoModelo;
 using Dapper;
 using Microsoft.Data.SqlClient;
 using System.Data;
@@ -19,42 +19,42 @@ namespace cotto_system.Servicios
         {
             using var connection = new SqlConnection(dbConnectionString);
 
-            await connection.ExecuteAsync("Pa_InsertaCliente", clientes, commandType: System.Data.CommandType.StoredProcedure);
+            await connection.ExecuteAsync("Pa_InsertaCliente", clientes, commandType: CommandType.StoredProcedure);
         }
 
         public async Task<IEnumerable<getGradosCalificacion>> getGradosClasificacion()
         {
             using var connection = new SqlConnection(dbConnectionString);
 
-            return await connection.QueryAsync<getGradosCalificacion>("pa_consultagradosclasificacion", commandType: System.Data.CommandType.StoredProcedure);
+            return await connection.QueryAsync<getGradosCalificacion>("pa_consultagradosclasificacion", commandType:  CommandType.StoredProcedure);
         }
 
         public async Task<IEnumerable<GetClases>> getClases()
         {
             using var connection = new SqlConnection(dbConnectionString);
 
-            return await connection.QueryAsync<GetClases>("pa_consultaclasesclasificacion", commandType: System.Data.CommandType.StoredProcedure);
+            return await connection.QueryAsync<GetClases>("pa_consultaclasesclasificacion", commandType:  CommandType.StoredProcedure);
         }
 
         public async Task<IEnumerable<PerfilVentaEnc>> getPerfilVentaEnc()
         {
             using var connection = new SqlConnection(dbConnectionString);
 
-            return await connection.QueryAsync<PerfilVentaEnc>("pa_consultaperfilventaenc", commandType: System.Data.CommandType.StoredProcedure);
+            return await connection.QueryAsync<PerfilVentaEnc>("pa_consultaperfilventaenc", commandType:  CommandType.StoredProcedure);
         }
 
         public async Task<IEnumerable<PerfilVentaDet>> getPerfilVentaDet(int idperfilenc)
         {
             using var connection = new SqlConnection(dbConnectionString);
 
-            return await connection.QueryAsync<PerfilVentaDet>("pa_consultaprfilventadet", new { idperfilenc }, commandType: System.Data.CommandType.StoredProcedure);
+            return await connection.QueryAsync<PerfilVentaDet>("pa_consultaprfilventadet", new { idperfilenc }, commandType:  CommandType.StoredProcedure);
         }
 
         public async Task<IEnumerable<UnidadVenta>> getUnidadVenta()
         {
             using var connection = new SqlConnection(dbConnectionString);
 
-            return await connection.QueryAsync<UnidadVenta>("pa_consultaunidadventa", commandType: System.Data.CommandType.StoredProcedure);
+            return await connection.QueryAsync<UnidadVenta>("pa_consultaunidadventa", commandType:  CommandType.StoredProcedure);
         }
 
         public async Task<int> AddValorUnidad(AddVentaUnidad addVentaUnidad)
@@ -71,7 +71,7 @@ namespace cotto_system.Servicios
 
             parameters.Add("@idperfilenc", dbType: DbType.Int32, direction: ParameterDirection.Output);
 
-            await connection.ExecuteAsync("pa_insertaunidadventaenc", parameters, commandType: System.Data.CommandType.StoredProcedure);
+            await connection.ExecuteAsync("pa_insertaunidadventaenc", parameters, commandType:  CommandType.StoredProcedure);
 
             return parameters.Get<int>("@idperfilenc");
         }

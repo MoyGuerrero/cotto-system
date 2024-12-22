@@ -1,5 +1,6 @@
 ﻿using cotto_system.interfaces;
 using cotto_system.Modelos;
+using cotto_system.Modelos.CatalogoModelo;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

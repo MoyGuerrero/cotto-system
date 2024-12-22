@@ -1,5 +1,5 @@
 ﻿using cotto_system.interfaces;
-using cotto_system.Modelos;
+using cotto_system.Modelos.CatalogoModelo;
 using Dapper;
 using Microsoft.Data.SqlClient;
 using System.Data;
@@ -25,7 +25,7 @@ namespace cotto_system.Servicios
 
                 usuario.Clave = Encritptar(usuario.Clave);
 
-                await connection.ExecuteAsync("sp_InsertarUsuario", usuario, commandType: System.Data.CommandType.StoredProcedure);
+                await connection.ExecuteAsync("sp_InsertarUsuario", usuario, commandType: CommandType.StoredProcedure);
 
             }
             catch (Exception ex)

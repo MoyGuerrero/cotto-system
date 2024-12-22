@@ -1,4 +1,4 @@
-﻿namespace cotto_system.Modelos
+﻿namespace cotto_system.Modelos.CatalogoModelo
 {
     public class GetUsuario
     {
