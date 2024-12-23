@@ -2,13 +2,13 @@
 {
     public class ResponseData<TData>
     {
-        public Boolean Ok { get; set; }
+        public bool Ok { get; set; }
         public string Message { get; set; }
         public int StatusCode { get; set; }
         public TData Data { get; set; }
         public string Token { get; set; }
 
-        public ResponseData(Boolean ok, string message, int statusCode, TData data, string token)
+        public ResponseData(bool ok, string message, int statusCode, TData data, string token)
         {
             Ok = ok;
             Message = message;
@@ -21,10 +21,10 @@
 
     public class Success
     {
-        public Boolean Ok { get; set; }
+        public bool Ok { get; set; }
         public string Message { get; set; }
         public int StatusCode { get; set; }
-        public Success(Boolean ok, string message, int statusCode)
+        public Success(bool ok, string message, int statusCode)
         {
             Ok = ok;
             Message = message;
@@ -38,7 +38,7 @@
         public string Message { get; set; }
         public int StatusCode { get; set; }
         public TData Data { get; set; }
-        public SuccessWithData(Boolean ok, string message, int statusCode, TData data)
+        public SuccessWithData(bool ok, string message, int statusCode, TData data)
         {
             Ok = ok;
             Message = message;
@@ -49,12 +49,12 @@
 
     public class SuccessWithID
     {
-        public Boolean Ok { get; set; }
+        public bool Ok { get; set; }
         public string Message { get; set; }
         public int StatusCode { get; set; }
         public int ID { get; set; }
 
-        public SuccessWithID(Boolean ok, string message, int statuscode, int id)
+        public SuccessWithID(bool ok, string message, int statuscode, int id)
         {
             Ok = ok;
             Message = message;

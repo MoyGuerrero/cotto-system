@@ -14,6 +14,7 @@ namespace cotto_system.interfaces
         Task<IEnumerable<GetClases>> getClases();
         Task<IEnumerable<Clientes>> GetClientes(int idcliente, string nombre);
         Task<IEnumerable<getGradosCalificacion>> getGradosClasificacion();
+        Task<IEnumerable<PerfilMicVentaEnc>> GetPerfilMicVentaEnc(int posicion);
         Task<IEnumerable<PerfilVentaDet>> getPerfilVentaDet(int idperfilenc);
         Task<IEnumerable<PerfilVentaEnc>> getPerfilVentaEnc();
         Task<IEnumerable<Clientes>> GetProveedor(int Idcomprador, string nombre);

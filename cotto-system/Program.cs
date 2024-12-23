@@ -1,7 +1,9 @@
+using cotto_system.Extensores;
 using cotto_system.interfaces;
 using cotto_system.Modelos;
 using cotto_system.Servicios;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Data.SqlClient;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Net;
@@ -65,9 +67,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
         }
     };
 });
-builder.Services.AddTransient<IRepositorioUsuario, RepositorioUsuario>();
-builder.Services.AddTransient<IRepositorioCatalogos, RepositorioCatalogos>();
-builder.Services.AddTransient<IRepositorioComercializacion, RepositorioComercializacion>();
+builder.Services.AgregarRepositorios();
 
 builder.Services.AddCors(options =>
 {

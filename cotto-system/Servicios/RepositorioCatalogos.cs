@@ -31,7 +31,6 @@ namespace cotto_system.Servicios
         public async Task<int> addGradosClasificacion(AddGradosCalificacion addGradosCalificacion)
         {
             using var connection = new SqlConnection(dbConnectionString);
-
             var parameters = new DynamicParameters();
 
             parameters.Add("@Idgradosclasificacion", addGradosCalificacion.Idgradosclasificacion, dbType: DbType.Int32, direction: ParameterDirection.InputOutput);
@@ -168,6 +167,14 @@ namespace cotto_system.Servicios
             using var connection = new SqlConnection(dbConnectionString);
 
             return await connection.QueryAsync<Clientes>("pa_consultacomprador", new { Idcomprador, nombre }, commandType: System.Data.CommandType.StoredProcedure);
+        }
+
+        public async Task<IEnumerable<PerfilMicVentaEnc>> GetPerfilMicVentaEnc(int posicion)
+        {
+            using var connection = new SqlConnection(dbConnectionString);
+            List<string> endpont = new List<string> { "pa_consultaperfilmicventaenc", "pa_consultaperfilresventaenc", "pa_consultaperfilsfiventaenc", "pa_consultaperfiluhmlventaenc" };
+
+            return await connection.QueryAsync<PerfilMicVentaEnc>(endpont[posicion], commandType: System.Data.CommandType.StoredProcedure);
         }
 
     }

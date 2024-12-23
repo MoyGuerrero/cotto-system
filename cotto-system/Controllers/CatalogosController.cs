@@ -8,8 +8,9 @@ using System.Net;
 namespace cotto_system.Controllers
 {
     [ApiController]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [Route("api/catalogos")]
-    public class CatalogosController : Controller
+    public class CatalogosController : ControllerBase
     {
         private readonly IRepositorioCatalogos repositorioCatalogos;
         private readonly IWebHostEnvironment env;
@@ -23,7 +24,6 @@ namespace cotto_system.Controllers
 
         [HttpPost]
         [Route("agregar_cliente")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> Post(Clientes clientes)
         {
             try
@@ -40,7 +40,6 @@ namespace cotto_system.Controllers
 
         [HttpPost]
         [Route("agregar_proveedor")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> PostProveedor(Proveedor proveedor)
         {
             try
@@ -57,7 +56,6 @@ namespace cotto_system.Controllers
 
         [HttpPost]
         [Route("agregar_grados_clasificacion")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> PostGradosClasificacion(AddGradosCalificacion addGradosCalificacion)
         {
             try
@@ -79,7 +77,6 @@ namespace cotto_system.Controllers
 
         [HttpPost]
         [Route("agregar_clase")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> AddClase(AddClases addClases)
         {
             var id = await repositorioCatalogos.addClases(addClases);
@@ -110,7 +107,6 @@ namespace cotto_system.Controllers
 
         [HttpGet]
         [Route("clases")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> GetClases()
         {
             try
@@ -126,7 +122,6 @@ namespace cotto_system.Controllers
 
         [HttpGet]
         [Route("perfilventaenc")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> GetPerfilVentaEnc()
         {
             try
@@ -142,7 +137,6 @@ namespace cotto_system.Controllers
 
         [HttpGet]
         [Route("perfilventadet/{idperfilenc:int}")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> GetPerfilVentaDet(int idperfilenc)
         {
             try
@@ -163,7 +157,6 @@ namespace cotto_system.Controllers
 
         [HttpGet]
         [Route("unidad_venta")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> GetUnidadVenta()
         {
             try
@@ -179,7 +172,6 @@ namespace cotto_system.Controllers
 
         [HttpPost]
         [Route("agregar_unidad_venta")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> AddUnidadVenta(AddVentaUnidad addVentaUnidad)
         {
             try
@@ -197,7 +189,6 @@ namespace cotto_system.Controllers
 
         [HttpPost]
         [Route("agregar_perfil_venta_enc")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> AddPerfilVentaEnc(AddPerfilVentaEnc addPerfilVentaEnc)
         {
             try
@@ -290,6 +281,22 @@ namespace cotto_system.Controllers
                 }
 
                 return Ok(new SuccessWithData<object>(true, "Success", (int)HttpStatusCode.OK, clientes));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode((int)HttpStatusCode.InternalServerError, new Success(false, ex.Message, (int)HttpStatusCode.InternalServerError));
+            }
+        }
+
+        [HttpGet]
+        [Route("obtener_perfiles_deduccion/{posicion:int}")]
+        public async Task<IActionResult> GetPerfilesMicVentaEnc(int posicion)
+        {
+            try
+            {
+                var perfilesMicVentaEnc = await repositorioCatalogos.GetPerfilMicVentaEnc(posicion);
+
+                return Ok(new SuccessWithData<object>(true, "success", (int)HttpStatusCode.OK, perfilesMicVentaEnc));
             }
             catch (Exception ex)
             {
