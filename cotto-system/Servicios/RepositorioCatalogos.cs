@@ -177,5 +177,55 @@ namespace cotto_system.Servicios
             return await connection.QueryAsync<PerfilMicVentaEnc>(endpont[posicion], commandType: System.Data.CommandType.StoredProcedure);
         }
 
+
+        public async Task<int> AddPerfilDeducciones(AddPerfilesDeducciones addPerfilDeducciones)
+        {
+            using var connection = new SqlConnection(dbConnectionString);
+
+            var parameters = new DynamicParameters();
+
+            parameters.Add("@idperfilenc", addPerfilDeducciones.idperfilenc, dbType: DbType.Int32, direction: ParameterDirection.InputOutput);
+            parameters.Add("@descripcion", addPerfilDeducciones.descripcion);
+            parameters.Add("@idestatus", addPerfilDeducciones.idestatus);
+            parameters.Add("@fechacreacion", addPerfilDeducciones.fechacreacion);
+            parameters.Add("@fechaactualizacion", addPerfilDeducciones.fechaactualizacion);
+
+            //parameters.Add("@idperfilenc", dbType: DbType.Int32, direction: ParameterDirection.Output);
+
+            await connection.ExecuteAsync("pa_insertaperfilmicrestaenc", parameters, commandType: System.Data.CommandType.StoredProcedure);
+
+            return parameters.Get<int>("@idperfilenc");
+        }
+
+
+        public async Task<List<int>> AddPerfilDeduccionDet(List<AddPerfilDeduccionesDet> addPerfilDeduccionesDet)
+        {
+            List<int> Id = new List<int>();
+
+            for (int i = 0; i < addPerfilDeduccionesDet.Count; i++)
+            {
+                using var connection = new SqlConnection(dbConnectionString);
+                var parameters = new DynamicParameters();
+                parameters.Add("@idperfildet", addPerfilDeduccionesDet[i].idperfildet);
+                parameters.Add("@idperfilenc", addPerfilDeduccionesDet[i].idperfilenc);
+                parameters.Add("@rango1", addPerfilDeduccionesDet[i].rango1);
+                parameters.Add("@rango2", addPerfilDeduccionesDet[i].rango2);
+                parameters.Add("@castigo", addPerfilDeduccionesDet[i].castigo);
+
+                //parameters.Add("@idperfilenc", dbType: DbType.Int32, direction: ParameterDirection.Output);
+
+                await connection.ExecuteAsync("pa_insertaperfilmicventadet", parameters, commandType: System.Data.CommandType.StoredProcedure);
+                Id.Add(parameters.Get<int>("@idperfilenc"));
+            }
+
+            return Id;
+        }
+
+        public async Task<IEnumerable<AddPerfilDeduccionesDet>> GetPerfillesDeduccionesDet(int idperfilenc)
+        {
+            using var connection = new SqlConnection(dbConnectionString);
+
+            return await connection.QueryAsync<AddPerfilDeduccionesDet>("pa_consultaperfilmicventadet", new { idperfilenc }, commandType: System.Data.CommandType.StoredProcedure);
+        }
     }
 }

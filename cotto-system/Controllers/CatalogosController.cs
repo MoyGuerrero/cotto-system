@@ -303,5 +303,53 @@ namespace cotto_system.Controllers
                 return StatusCode((int)HttpStatusCode.InternalServerError, new Success(false, ex.Message, (int)HttpStatusCode.InternalServerError));
             }
         }
+
+        [HttpPost]
+        [Route("agregar_perfiles_deduccion")]
+        public async Task<IActionResult> AddPerfilDeduccion(AddPerfilesDeducciones addPerfilesDeducciones)
+        {
+            try
+            {
+                var id = await repositorioCatalogos.AddPerfilDeducciones(addPerfilesDeducciones);
+
+                return Ok(new SuccessWithID(true, $"El perfil con el id {id} se agregado con éxito.", (int)HttpStatusCode.OK, id));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode((int)HttpStatusCode.InternalServerError, new Success(false, ex.Message, (int)HttpStatusCode.InternalServerError));
+            }
+        }
+
+        [HttpPost]
+        [Route("agregar_perfiles_deduccion_enc")]
+        public async Task<IActionResult> AddPerfilDeduccionDet(List<AddPerfilDeduccionesDet> addPerfilDeduccionesDets)
+        {
+            try
+            {
+                var id = await repositorioCatalogos.AddPerfilDeduccionDet(addPerfilDeduccionesDets);
+
+                return Ok(new Success(true, $"El perfil se agregado con éxito.", (int)HttpStatusCode.OK));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode((int)HttpStatusCode.InternalServerError, new Success(false, ex.Message, (int)HttpStatusCode.InternalServerError));
+            }
+        }
+
+        [HttpGet]
+        [Route("get_perfiles_deducciones/{idperfilenc:int}")]
+        public async Task<IActionResult> GetPerfilesDeduccionesDet(int idperfilenc)
+        {
+            try
+            {
+                var perfiles = await repositorioCatalogos.GetPerfillesDeduccionesDet(idperfilenc);
+
+                return Ok(new SuccessWithData<object>(true,"Datos cargado con éxito.",(int)HttpStatusCode.OK,perfiles));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode((int)HttpStatusCode.InternalServerError, new Success(false, ex.Message, (int)HttpStatusCode.InternalServerError));
+            }
+        }
     }
 }
