@@ -305,12 +305,12 @@ namespace cotto_system.Controllers
         }
 
         [HttpPost]
-        [Route("agregar_perfiles_deduccion")]
-        public async Task<IActionResult> AddPerfilDeduccion(AddPerfilesDeducciones addPerfilesDeducciones)
+        [Route("agregar_perfiles_deduccion/{position:int}")]
+        public async Task<IActionResult> AddPerfilDeduccion(AddPerfilesDeducciones addPerfilesDeducciones, int position)
         {
             try
             {
-                var id = await repositorioCatalogos.AddPerfilDeducciones(addPerfilesDeducciones);
+                var id = await repositorioCatalogos.AddPerfilDeducciones(addPerfilesDeducciones, position);
 
                 return Ok(new SuccessWithID(true, $"El perfil con el id {id} se agregado con éxito.", (int)HttpStatusCode.OK, id));
             }
@@ -321,12 +321,28 @@ namespace cotto_system.Controllers
         }
 
         [HttpPost]
-        [Route("agregar_perfiles_deduccion_enc")]
-        public async Task<IActionResult> AddPerfilDeduccionDet(List<AddPerfilDeduccionesDet> addPerfilDeduccionesDets)
+        [Route("agregar_perfiles_deduccion_enc/{position:int}")]
+        public async Task<IActionResult> AddPerfilDeduccionDet([FromBody] List<AddPerfilDeduccionesDet> addPerfilDeduccionesDets, int position)
         {
             try
             {
-                var id = await repositorioCatalogos.AddPerfilDeduccionDet(addPerfilDeduccionesDets);
+                var id = await repositorioCatalogos.AddPerfilDeduccionDet(addPerfilDeduccionesDets, position);
+
+                return Ok(new Success(true, $"El perfil se agregado con éxito.", (int)HttpStatusCode.OK));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode((int)HttpStatusCode.InternalServerError, new Success(false, ex.Message, (int)HttpStatusCode.InternalServerError));
+            }
+        }
+
+        [HttpPost]
+        [Route("agregar_perfiles_deduccion_enc_uhml")]
+        public async Task<IActionResult> AddPerfilUHML([FromBody] List<PerfilUHMLVentaDet> perfiluhml)
+        {
+            try
+            {
+                var id = await repositorioCatalogos.AddPerfilVentaUHMLDets(perfiluhml);
 
                 return Ok(new Success(true, $"El perfil se agregado con éxito.", (int)HttpStatusCode.OK));
             }
@@ -337,14 +353,34 @@ namespace cotto_system.Controllers
         }
 
         [HttpGet]
-        [Route("get_perfiles_deducciones/{idperfilenc:int}")]
-        public async Task<IActionResult> GetPerfilesDeduccionesDet(int idperfilenc)
+        [Route("get_perfiles_deducciones/{idperfilenc:int}/{position:int}")]
+        public async Task<IActionResult> GetPerfilesDeduccionesDet(int idperfilenc, int position)
         {
             try
             {
-                var perfiles = await repositorioCatalogos.GetPerfillesDeduccionesDet(idperfilenc);
+                if (position == 3)
+                {
+                    var perfilesUHML = await repositorioCatalogos.GetPerfilUHMLVentaDet(idperfilenc);
+                    return Ok(new SuccessWithData<object>(true, "Datos cargado con éxito.", (int)HttpStatusCode.OK, perfilesUHML));
+                }
+                var perfiles = await repositorioCatalogos.GetPerfillesDeduccionesDet(idperfilenc, position);
 
-                return Ok(new SuccessWithData<object>(true,"Datos cargado con éxito.",(int)HttpStatusCode.OK,perfiles));
+                return Ok(new SuccessWithData<object>(true, "Datos cargado con éxito.", (int)HttpStatusCode.OK, perfiles));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode((int)HttpStatusCode.InternalServerError, new Success(false, ex.Message, (int)HttpStatusCode.InternalServerError));
+            }
+        }
+
+        [HttpDelete]
+        [Route("{position:int}/eliminar_perfil/{idperfildet:int}")]
+        public async Task<IActionResult> DeletePerfil(int position, int idperfildet)
+        {
+            try
+            {
+                await repositorioCatalogos.DeletePerfil(idperfildet, position);
+                return Ok(new Success(true, $"El perfil con el id {idperfildet} se ha eliminado con éxito.", (int)HttpStatusCode.OK));
             }
             catch (Exception ex)
             {

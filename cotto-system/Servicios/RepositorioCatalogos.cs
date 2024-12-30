@@ -172,13 +172,13 @@ namespace cotto_system.Servicios
         public async Task<IEnumerable<PerfilMicVentaEnc>> GetPerfilMicVentaEnc(int posicion)
         {
             using var connection = new SqlConnection(dbConnectionString);
-            List<string> endpont = new List<string> { "pa_consultaperfilmicventaenc", "pa_consultaperfilresventaenc", "pa_consultaperfilsfiventaenc", "pa_consultaperfiluhmlventaenc" };
+            List<string> endpont = new List<string> { "pa_consultaperfilmicventaenc", "pa_consultaperfilresventaenc", "pa_consultaperfiluniventaenc", "pa_consultaperfiluhmlventaenc" };
 
             return await connection.QueryAsync<PerfilMicVentaEnc>(endpont[posicion], commandType: System.Data.CommandType.StoredProcedure);
         }
 
 
-        public async Task<int> AddPerfilDeducciones(AddPerfilesDeducciones addPerfilDeducciones)
+        public async Task<int> AddPerfilDeducciones(AddPerfilesDeducciones addPerfilDeducciones, int posicion)
         {
             using var connection = new SqlConnection(dbConnectionString);
 
@@ -192,15 +192,19 @@ namespace cotto_system.Servicios
 
             //parameters.Add("@idperfilenc", dbType: DbType.Int32, direction: ParameterDirection.Output);
 
-            await connection.ExecuteAsync("pa_insertaperfilmicrestaenc", parameters, commandType: System.Data.CommandType.StoredProcedure);
+            List<string> endpoint = new List<string>() { "pa_insertaperfilmicrestaenc", "pa_insertaperfilresventaenc", "pa_insertaperfiluniventaenc", "pa_insertaperfiluhmlventaenc" };
+
+            await connection.ExecuteAsync(endpoint[posicion], parameters, commandType: System.Data.CommandType.StoredProcedure);
 
             return parameters.Get<int>("@idperfilenc");
         }
 
 
-        public async Task<List<int>> AddPerfilDeduccionDet(List<AddPerfilDeduccionesDet> addPerfilDeduccionesDet)
+        public async Task<List<int>> AddPerfilDeduccionDet(List<AddPerfilDeduccionesDet> addPerfilDeduccionesDet, int position)
         {
             List<int> Id = new List<int>();
+            List<string> endpoint = new List<string>() { "pa_insertaperfilmicventadet", "pa_insertaperfilresventadet", "pa_insertaperfiluniventadet" };
+            string endpointSelect = endpoint[position];
 
             for (int i = 0; i < addPerfilDeduccionesDet.Count; i++)
             {
@@ -214,18 +218,58 @@ namespace cotto_system.Servicios
 
                 //parameters.Add("@idperfilenc", dbType: DbType.Int32, direction: ParameterDirection.Output);
 
-                await connection.ExecuteAsync("pa_insertaperfilmicventadet", parameters, commandType: System.Data.CommandType.StoredProcedure);
+                await connection.ExecuteAsync(endpoint[position], parameters, commandType: System.Data.CommandType.StoredProcedure);
                 Id.Add(parameters.Get<int>("@idperfilenc"));
             }
 
             return Id;
         }
 
-        public async Task<IEnumerable<AddPerfilDeduccionesDet>> GetPerfillesDeduccionesDet(int idperfilenc)
+        public async Task<List<int>> AddPerfilVentaUHMLDets(List<PerfilUHMLVentaDet> addPerfilVentaUHmlDets)
+        {
+            List<int> Id = new List<int>();
+
+            for (int i = 0; i < addPerfilVentaUHmlDets.Count; i++)
+            {
+                using var connection = new SqlConnection(dbConnectionString);
+                var parameters = new DynamicParameters();
+                parameters.Add("@idperfildet", addPerfilVentaUHmlDets[i].idperfildet);
+                parameters.Add("@idperfilenc", addPerfilVentaUHmlDets[i].idperfilenc);
+                parameters.Add("@rango1", addPerfilVentaUHmlDets[i].rango1);
+                parameters.Add("@rango2", addPerfilVentaUHmlDets[i].rango2);
+                parameters.Add("@LenghtNDS", addPerfilVentaUHmlDets[i].lenghtNDS);
+                parameters.Add("@castigo", addPerfilVentaUHmlDets[i].castigo);
+
+                //parameters.Add("@idperfilenc", dbType: DbType.Int32, direction: ParameterDirection.Output);
+
+                await connection.ExecuteAsync("pa_insertaperfiluhmlventadet", parameters, commandType: System.Data.CommandType.StoredProcedure);
+                Id.Add(parameters.Get<int>("@idperfilenc"));
+            }
+
+            return Id;
+        }
+
+        public async Task<IEnumerable<AddPerfilDeduccionesDet>> GetPerfillesDeduccionesDet(int idperfilenc, int position)
+        {
+            using var connection = new SqlConnection(dbConnectionString);
+            List<string> endpont = new List<string>() { "pa_consultaperfilmicventadet", "pa_consultaperfilresventadet", "pa_consultaperfiluniventadet", };
+
+            return await connection.QueryAsync<AddPerfilDeduccionesDet>(endpont[position], new { idperfilenc }, commandType: System.Data.CommandType.StoredProcedure);
+        }
+
+        public async Task<IEnumerable<PerfilUHMLVentaDet>> GetPerfilUHMLVentaDet(int idperfilenc)
         {
             using var connection = new SqlConnection(dbConnectionString);
 
-            return await connection.QueryAsync<AddPerfilDeduccionesDet>("pa_consultaperfilmicventadet", new { idperfilenc }, commandType: System.Data.CommandType.StoredProcedure);
+            return await connection.QueryAsync<PerfilUHMLVentaDet>("pa_consultaperfiluhmlventadet", new { idperfilenc }, commandType: System.Data.CommandType.StoredProcedure);
+        }
+
+        public async Task DeletePerfil(int idperfildet, int position)
+        {
+            using var connection = new SqlConnection(dbConnectionString);
+            List<string> endpoint = new List<string>() { "cat_perfilmicventadet", "cat_perfilresventadet", "cat_perfiluniventadet", "cat_perfiluhmlventadet" };
+
+            await connection.QueryAsync($"DELETE FROM {endpoint[position]} where idperfildet = @idperfildet", new { idperfildet });
         }
     }
 }
