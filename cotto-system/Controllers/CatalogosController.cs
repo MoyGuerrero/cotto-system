@@ -91,7 +91,6 @@ namespace cotto_system.Controllers
 
         [HttpGet]
         [Route("grados_clasificacion")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> GetGradosClasificacion()
         {
             try
@@ -205,7 +204,6 @@ namespace cotto_system.Controllers
 
         [HttpPost]
         [Route("agregar_perfil_venta_det")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> AddPerfilVentaDet(List<AddPerfilVentaDet> addPerfilVentaDets)
         {
             try
@@ -221,22 +219,21 @@ namespace cotto_system.Controllers
         }
 
         [HttpGet]
-        [Route("descargar_plantilla_gc")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public IActionResult Download()
+        [Route("descargar_plantilla/{nombre_archivo}")]
+        public IActionResult Download(string nombre_archivo)
         {
             try
             {
-                string filePath = Path.Combine(env.ContentRootPath, "Plantillas", "plantilla_carga_gradosclasif.xltx");
+                string filePath = Path.Combine(env.ContentRootPath, "Plantillas", $"{nombre_archivo}1.xlsx");
                 if (!System.IO.File.Exists(filePath))
                 {
-                    return NotFound(new Success(false, $"El archivo plantilla_carga_gradosclasif no fue encontrado.", (int)HttpStatusCode.NotFound));
+                    return NotFound(new Success(false, $"El archivo {nombre_archivo} no fue encontrado.", (int)HttpStatusCode.NotFound));
                 }
 
                 byte[] fileByte = System.IO.File.ReadAllBytes(filePath);
 
 
-                return File(fileByte, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "plantilla_carga_gradosclasif.xltx");
+                return File(fileByte, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", $"{nombre_archivo}.xlsx");
             }
             catch (Exception ex)
             {
@@ -246,7 +243,6 @@ namespace cotto_system.Controllers
 
         [HttpGet]
         [Route("getClientes/{idcliente:int}/{nombre}")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> GetClientes(int idcliente, string nombre)
         {
             try
@@ -268,7 +264,6 @@ namespace cotto_system.Controllers
 
         [HttpGet]
         [Route("getProveedor/{Idcomprador:int}/{nombre}")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> GetProveedor(int Idcomprador, string nombre)
         {
             try
