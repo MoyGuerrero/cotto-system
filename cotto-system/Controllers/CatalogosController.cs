@@ -369,13 +369,29 @@ namespace cotto_system.Controllers
         }
 
         [HttpDelete]
-        [Route("{position:int}/eliminar_perfil/{idperfildet:int}")]
-        public async Task<IActionResult> DeletePerfil(int position, int idperfildet)
+        [Route("{position:int}/eliminar_perfil/{idperfilenc:int}")]
+        public async Task<IActionResult> DeletePerfil(int position, int idperfilenc)
         {
             try
             {
-                await repositorioCatalogos.DeletePerfil(idperfildet, position);
-                return Ok(new Success(true, $"El perfil con el id {idperfildet} se ha eliminado con éxito.", (int)HttpStatusCode.OK));
+                await repositorioCatalogos.DeletePerfil(idperfilenc, position);
+                return Ok(new Success(true, $"El perfil con el id {idperfilenc} se ha eliminado con éxito.", (int)HttpStatusCode.OK));
+            }
+            catch (Exception ex)
+            {
+                return StatusCode((int)HttpStatusCode.InternalServerError, new Success(false, ex.Message, (int)HttpStatusCode.InternalServerError));
+            }
+        }
+
+        [HttpDelete]
+        [Route("eliminar_grados")]
+        public async Task<IActionResult> Delete()
+        {
+            try
+            {
+                await repositorioCatalogos.DeleteGrados();
+
+                return Ok(new Success(true, "Success", (int)HttpStatusCode.OK));
             }
             catch (Exception ex)
             {

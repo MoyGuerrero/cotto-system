@@ -14,7 +14,8 @@ namespace cotto_system.interfaces
         Task<List<int>> AddPerfilVentaUHMLDets(List<PerfilUHMLVentaDet> addPerfilVentaUHmlDets);
         Task addProveedor(Proveedor proveedor);
         Task<int> AddValorUnidad(AddVentaUnidad addVentaUnidad);
-        Task DeletePerfil(int idperfildet, int position);
+        Task DeleteGrados();
+        Task DeletePerfil(int idperfilenc, int position);
         Task<IEnumerable<GetClases>> getClases();
         Task<IEnumerable<Clientes>> GetClientes(int idcliente, string nombre);
         Task<IEnumerable<getGradosCalificacion>> getGradosClasificacion();

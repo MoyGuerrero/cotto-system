@@ -264,12 +264,20 @@ namespace cotto_system.Servicios
             return await connection.QueryAsync<PerfilUHMLVentaDet>("pa_consultaperfiluhmlventadet", new { idperfilenc }, commandType: System.Data.CommandType.StoredProcedure);
         }
 
-        public async Task DeletePerfil(int idperfildet, int position)
+        public async Task DeletePerfil(int idperfilenc, int position)
         {
             using var connection = new SqlConnection(dbConnectionString);
-            List<string> endpoint = new List<string>() { "cat_perfilmicventadet", "cat_perfilresventadet", "cat_perfiluniventadet", "cat_perfiluhmlventadet" };
+            List<string> endpoint = new List<string>() { "pa_eliminarparametrosperfilmicdet", "pa_eliminarparametrosperfilresdet", "pa_eliminarparametrosperfilunidet", "pa_eliminarparametrosperfiluhmldet" };
 
-            await connection.QueryAsync($"DELETE FROM {endpoint[position]} where idperfildet = @idperfildet", new { idperfildet });
+            await connection.ExecuteAsync(endpoint[position], new { idperfilenc }, commandType: System.Data.CommandType.StoredProcedure);
+        }
+
+
+        public async Task DeleteGrados()
+        {
+            using var connection = new SqlConnection(dbConnectionString);
+
+            await connection.ExecuteAsync("pa_eliminarparametrosgradosclasif", commandType: System.Data.CommandType.StoredProcedure);
         }
     }
 }
