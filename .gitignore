@@ -363,3 +363,5 @@ MigrationBackup/
 FodyWeavers.xsd
 cotto-system/appsettings.Development.json
 cotto-system/appsettings.json
+cotto-system/appsettings.Development.json
+cotto-system/appsettings.json

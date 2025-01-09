@@ -10,6 +10,64 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Plantillas\plantilla_carga_gradosclasif.xltx" />
+    <None Remove="Plantillas\plantilla_carga_gradosclasif1.xlsx" />
+    <None Remove="Plantillas\plantilla_carga_hvi.xlsx" />
+    <None Remove="Plantillas\plantilla_carga_hvi.xltx" />
+    <None Remove="Plantillas\plantilla_carga_pacas.mdb" />
+    <None Remove="Plantillas\plantilla_carga_pacas.xlsx" />
+    <None Remove="Plantillas\plantilla_carga_pacas.xltx" />
+    <None Remove="Plantillas\plantilla_carga_parametros.xlsx" />
+    <None Remove="Plantillas\plantilla_carga_parametros.xltx" />
+    <None Remove="Plantillas\plantilla_carga_parametros_uhml.xlsx" />
+    <None Remove="Plantillas\plantilla_carga_parametros_uhml.xltx" />
+    <None Remove="Plantillas\Plantilla_carga_proveedor_lbs.xlsx" />
+    <None Remove="Plantillas\Plantilla_carga_proveedor_lbs.xltx" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Plantillas\plantilla_carga_gradosclasif.xltx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Plantillas\plantilla_carga_gradosclasif1.xlsx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Plantillas\plantilla_carga_hvi.xlsx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Plantillas\plantilla_carga_hvi.xltx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Plantillas\plantilla_carga_pacas.mdb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Plantillas\plantilla_carga_pacas.xlsx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Plantillas\plantilla_carga_pacas.xltx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Plantillas\plantilla_carga_parametros.xlsx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Plantillas\plantilla_carga_parametros.xltx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Plantillas\plantilla_carga_parametros_uhml.xlsx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Plantillas\plantilla_carga_parametros_uhml.xltx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Plantillas\Plantilla_carga_proveedor_lbs.xlsx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Plantillas\Plantilla_carga_proveedor_lbs.xltx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
     <PackageReference Include="Dapper" Version="2.1.35" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.36" />

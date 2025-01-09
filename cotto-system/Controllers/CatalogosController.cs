@@ -224,7 +224,7 @@ namespace cotto_system.Controllers
         {
             try
             {
-                string filePath = Path.Combine(env.ContentRootPath, "Plantillas", $"{nombre_archivo}1.xlsx");
+                string filePath = Path.Combine(env.ContentRootPath, "Plantillas", $"{nombre_archivo}");
                 if (!System.IO.File.Exists(filePath))
                 {
                     return NotFound(new Success(false, $"El archivo {nombre_archivo} no fue encontrado.", (int)HttpStatusCode.NotFound));
@@ -233,7 +233,7 @@ namespace cotto_system.Controllers
                 byte[] fileByte = System.IO.File.ReadAllBytes(filePath);
 
 
-                return File(fileByte, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", $"{nombre_archivo}.xlsx");
+                return File(fileByte, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", $"{nombre_archivo}");
             }
             catch (Exception ex)
             {
