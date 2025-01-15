@@ -45,5 +45,8 @@
         public string nombrecomprador { get; set; }
         public string nombrecliente { get; set; }
         public decimal parametro { get; set; }
+        public int idestatus { get; set; }
+        public DateTime fechacreacion { get; set; }
+        public DateTime fechaactualizacion { get; set; }
     }
 }

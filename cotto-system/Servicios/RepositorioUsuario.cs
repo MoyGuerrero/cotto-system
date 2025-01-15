@@ -33,10 +33,7 @@ namespace cotto_system.Servicios
 
                 throw new Exception(ex.Message);
             }
-
         }
-
-
         public async Task<GetUsuario> Login(string Usuario)
         {
             try
@@ -51,11 +48,7 @@ namespace cotto_system.Servicios
 
                 throw new Exception(ex.Message);
             }
-
-
         }
-
-
         public string Encritptar(string password)
         {
             using (SHA512 cifrador = SHA512.Create())
@@ -65,15 +58,11 @@ namespace cotto_system.Servicios
                 return Convert.ToBase64String(claveCifrada);
             }
         }
-
         public bool verifyPassword(string hashPassword, string password)
         {
             if (hashPassword == Encritptar(password)) return true;
 
             return false;
         }
-
-
-
     }
 }

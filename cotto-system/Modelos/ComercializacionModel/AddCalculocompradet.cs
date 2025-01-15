@@ -18,6 +18,8 @@
         public int trashid { get; set; }
         public int sci { get; set; }
         public decimal kilos { get; set; }
+        public decimal libras { get; set; }
+        public decimal quintales { get; set; }
         public decimal preciopaca { get; set; }
         public decimal precioclase { get; set; }
         public decimal valorpeso { get; set; }
