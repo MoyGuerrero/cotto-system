@@ -1,17 +1,16 @@
 ﻿using cotto_system.interfaces;
 using cotto_system.Modelos;
 using cotto_system.Modelos.ComercializacionModel;
-using cotto_system.Servicios;
-using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
-using RouteAttribute = Microsoft.AspNetCore.Components.RouteAttribute;
 
 namespace cotto_system.Controllers
 {
     [ApiController]
     [Route("api/comercializacion")]
-    public class ComercializacionController : Controller
+    public class ComercializacionController : ControllerBase
     {
         private readonly IRepositorioComercializacion repositorioComercializacion;
         private readonly IWebHostEnvironment env;
