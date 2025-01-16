@@ -15,7 +15,7 @@ namespace cotto_system.Servicios
         {
             dbConnectionString = configuration.GetConnectionString("calculacott");
         }
-        public async Task<int> addCalculocompraEnc(AddCalculocompraenc addCalculocompraenc)
+        public async Task<int> addCalculoCompraEnc(AddCalculocompraenc addCalculocompraenc)
         {
             using var connection = new SqlConnection(dbConnectionString);
             var parameters = new DynamicParameters();
@@ -67,7 +67,7 @@ namespace cotto_system.Servicios
 
             return parameters.Get<int>("@idcalculocompra");
         }
-        public async Task<int> addCalculocompraDet(AddCalculocompradet addCalculocompradet)
+        public async Task<int> addCalculoCompraDet(AddCalculocompradet addCalculocompradet)
         {
             using var connection = new SqlConnection(dbConnectionString);
             var parameters = new DynamicParameters();
@@ -90,7 +90,7 @@ namespace cotto_system.Servicios
 
             return parameters.Get<int>("@idcalculocompra");
         }
-        public async Task<IEnumerable<GetCalculocompraenc>> GetCalculocompraenc()
+        public async Task<IEnumerable<GetCalculocompraenc>> GetCalculoCompraEnc()
         {
             using var connection = new SqlConnection(dbConnectionString);
 

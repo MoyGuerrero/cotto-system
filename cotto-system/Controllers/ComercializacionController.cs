@@ -26,7 +26,7 @@ namespace cotto_system.Controllers
         {
             try
             {
-                var idcalculocompranec = await repositorioComercializacion.addcalculocompraenc(addcalculocompraenc);
+                var idcalculocompranec = await repositorioComercializacion.addCalculoCompraEnc(addcalculocompraenc);
 
                 if (idcalculocompranec == addcalculocompraenc.idcalculo)
                 {
@@ -42,11 +42,11 @@ namespace cotto_system.Controllers
         }
         [HttpGet]
         [Route("getCalculoCompra/{idcalculocompraenc:int}/{nombre}")]
-        public async Task<IActionResult> getCalculocompraenc(int idcalculocompraenc, string nombre)
+        public async Task<IActionResult> GetCalculoCompraEnc(int idcalculocompraenc, string nombre)
         {
             try
             {
-                var compras = await repositorioComercializacion.getCalculocompraenc(idcalculocompraenc, nombre);
+                var compras = await repositorioComercializacion.GetCalculoCompraEnc(idcalculocompraenc, nombre);
 
                 if (compras is null)
                 {
