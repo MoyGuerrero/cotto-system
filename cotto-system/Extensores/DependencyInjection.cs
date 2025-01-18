@@ -10,6 +10,7 @@ namespace cotto_system.Extensores
             services.AddTransient<IRepositorioUsuario, RepositorioUsuario>();
             services.AddTransient<IRepositorioCatalogos, RepositorioCatalogos>();
             services.AddTransient<IRepositorioComercializacion, RepositorioComercializacion>();
+            services.AddTransient<IRepositorioGuardarImagen, RepositorioGuardarImagenes>();
             return services;
         }
     }

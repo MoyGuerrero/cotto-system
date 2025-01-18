@@ -6,12 +6,14 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net;
+using System.Security.AccessControl;
 using System.Security.Claims;
 using System.Text;
 
 namespace cotto_system.Controllers
 {
     [ApiController]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [Route("api/usuario")]
     public class UsuarioController : ControllerBase
     {
@@ -43,6 +45,7 @@ namespace cotto_system.Controllers
 
         [HttpPost]
         [Route("login")]
+        [AllowAnonymous]
         public async Task<IActionResult> Login(Login login)
         {
             try
@@ -72,7 +75,6 @@ namespace cotto_system.Controllers
 
         [HttpGet]
         [Route("renewToken")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> RenovarToken()
         {
 
@@ -90,10 +92,8 @@ namespace cotto_system.Controllers
 
                 return StatusCode((int)HttpStatusCode.InternalServerError, new Success(false, ex.Message, (int)HttpStatusCode.InternalServerError));
             }
-
-
-
         }
+
         private string Token(GetUsuario usuario)
         {
 

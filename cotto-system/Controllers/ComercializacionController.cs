@@ -46,7 +46,8 @@ namespace cotto_system.Controllers
         {
             try
             {
-                var compras = await repositorioComercializacion.GetCalculoCompraEnc(idcalculocompraenc, nombre);
+                //var compras = await repositorioComercializacion.GetCalculoCompraEnc(idcalculocompraenc, nombre);
+                var compras = await repositorioComercializacion.GetCalculoCompraEnc();
 
                 if (compras is null)
                 {
