@@ -86,15 +86,135 @@ namespace cotto_system.Servicios
             parameters.Add("@castigouni", addCalculocompradet.castigouni);
             parameters.Add("@castigosfi", addCalculocompradet.castigosfi);
 
-            await connection.ExecuteAsync("pa_insertacalculocompraenc", parameters, commandType: System.Data.CommandType.StoredProcedure);
+            await connection.ExecuteAsync("pa_insertacompracalculodet", parameters, commandType: System.Data.CommandType.StoredProcedure);
 
             return parameters.Get<int>("@idcalculocompra");
         }
-        public async Task<IEnumerable<GetCalculocompraenc>> GetCalculoCompraEnc()
+        public async Task<IEnumerable<GetCalculocompraenc>> GetCalculoCompraEnc(string nombre)
         {
             using var connection = new SqlConnection(dbConnectionString);
 
-            return await connection.QueryAsync<GetCalculocompraenc>("pa_consultacalculoscompra", commandType: System.Data.CommandType.StoredProcedure);
+            return await connection.QueryAsync<GetCalculocompraenc>("pa_consultacalculoscompra",new {nombre}, commandType: System.Data.CommandType.StoredProcedure);
         }
+        public async Task<IEnumerable<GetPacasSinCompra>> GetPacasSinCompra(int idcliente)
+        {
+            using var connection = new SqlConnection(dbConnectionString);
+
+            return await connection.QueryAsync<GetPacasSinCompra>("pa_consultapacassincompra", new { idcliente }, commandType: System.Data.CommandType.StoredProcedure);
+        }
+        public async Task<IEnumerable<GetPacasConCompra>> GetPacasConCompra(int idcompraenc)
+        {
+            using var connection = new SqlConnection(dbConnectionString);
+
+            return await connection.QueryAsync<GetPacasConCompra>("pa_consultapacascompradet", new { idcompraenc }, commandType: System.Data.CommandType.StoredProcedure);
+        }
+        //CALCULO DE PACAS 
+        //private void recorrepacas(int idunidad, decimal valorunidad)
+        //{
+        //    int decimalesDeseados = 4;
+        //    decimal factor = (decimal)Math.Pow(10, decimalesDeseados);
+        //    decimal sumaprecio = 0, sumacastigomic = 0, sumacastigouhml = 0, sumacastigores = 0, sumacastigouni = 0, sumacastigosfi = 0, sumacastigopredio = 0, sumacastigocamino = 0;
+        //    if (idunidad == 1)
+        //    {
+        //        foreach (DataRow fila in dtdestino.Rows)
+        //        {
+        //            decimal precioclasegrade = precioclase(fila["grade"].ToString());
+        //            decimal quintales = (decimal)fila["quintalescompra"];
+        //            decimal kilos = Convert.ToDecimal(fila["kiloscompra"]);
+        //            decimal libras = Convert.ToDecimal(fila["librascompra"]);
+        //            fila["idcalculocompra"] = String.IsNullOrEmpty(tbidcalculo.Text) ? 0 : Convert.ToInt32(tbidcalculo.Text.Trim());
+        //            fila["preciocompra"] = Math.Truncate((quintales * precioclasegrade) * factor) / factor;
+        //            fila["precioclasecompra"] = precioclasegrade;
+        //            fila["castigomiccompra"] = consultacastigomic(quintales, Math.Truncate(Convert.ToDecimal(fila["mic"]) * 100) / 100);
+        //            fila["castigouhmlcompra"] = consultacastigouhml(quintales, Math.Truncate(Convert.ToDecimal(fila["uhml"]) * 100) / 100);
+        //            fila["castigorescompra"] = consultacastigores(quintales, Math.Truncate(Convert.ToDecimal(fila["strength"]) * 100) / 100);
+        //            fila["castigounicompra"] = consultacastigouni(quintales, Math.Truncate(Convert.ToDecimal(fila["ui"]) * 100) / 100);
+        //            fila["castigosficompra"] = consultacastigosfi(quintales, Math.Truncate(Convert.ToDecimal(fila["sfi"]) * 100) / 100);
+
+        //            if (dgvadicionales.Rows.Count > 0)
+        //            {
+        //                sumacastigopredio += Convert.ToBoolean(fila["activadeduccion"]) == true ? -Convert.ToDecimal(dgvadicionales.Rows[0].Cells["deduccion"].Value) : 0;
+        //                sumacastigocamino += -Convert.ToDecimal(dgvadicionales.Rows[1].Cells["deduccion"].Value);
+        //            }
+        //            else
+        //            {
+        //                sumacastigopredio = 0;
+        //                sumacastigocamino = 0;
+        //            }
+        //            sumaprecio += Math.Round((decimal)fila["preciocompra"], 5);
+        //            sumacastigomic += Math.Round((decimal)fila["castigomiccompra"], 5);
+        //            sumacastigouhml += Math.Round((decimal)fila["castigouhmlcompra"], 5);
+        //            sumacastigores += Math.Round((decimal)fila["castigorescompra"], 5);
+        //            sumacastigouni += Math.Round((decimal)fila["castigounicompra"], 5);
+        //            sumacastigosfi += Math.Round((decimal)fila["castigosficompra"], 5);
+        //        }
+        //    }
+        //    else if (idunidad == 2)
+        //    {
+        //        foreach (DataRow fila in dtdestino.Rows)
+        //        {
+        //            decimal precioclasegrade = precioclase(fila["grade"].ToString()) / 100;
+        //            decimal kilos = Convert.ToDecimal(fila["kiloscompra"]);
+        //            decimal libras = Convert.ToDecimal(fila["librascompra"]);
+        //            fila["idcalculocompra"] = String.IsNullOrEmpty(tbidcalculo.Text) ? 0 : Convert.ToInt32(tbidcalculo.Text.Trim());
+        //            fila["preciocompra"] = Math.Truncate((libras * precioclasegrade) * factor) / factor;
+        //            fila["precioclasecompra"] = precioclasegrade;
+        //            fila["castigomiccompra"] = (consultacastigomic(libras, Math.Truncate(Convert.ToDecimal(fila["mic"]) * 100) / 100) / 100);
+        //            fila["castigouhmlcompra"] = (consultacastigouhml(libras, Math.Truncate(Convert.ToDecimal(fila["uhml"]) * 100) / 100) / 100);
+        //            fila["castigorescompra"] = (consultacastigores(libras, Math.Truncate(Convert.ToDecimal(fila["strength"]) * 100) / 100) / 100);
+        //            fila["castigounicompra"] = (consultacastigouni(libras, Math.Truncate(Convert.ToDecimal(fila["ui"]) * 100) / 100) / 100);
+        //            fila["castigosficompra"] = (consultacastigosfi(libras, Math.Truncate(Convert.ToDecimal(fila["sfi"]) * 100) / 100) / 100);
+
+        //            if (dgvadicionales.Rows.Count > 0)
+        //            {
+        //                sumacastigopredio += Convert.ToBoolean(fila["activadeduccion"]) == true ? -Convert.ToDecimal(dgvadicionales.Rows[0].Cells["deduccion"].Value) : 0;
+        //                sumacastigocamino += -Convert.ToDecimal(dgvadicionales.Rows[1].Cells["deduccion"].Value);
+        //            }
+        //            else
+        //            {
+        //                sumacastigopredio = 0;
+        //                sumacastigocamino = 0;
+        //            }
+        //            sumaprecio += Math.Round((decimal)fila["preciocompra"], 5);
+        //            sumacastigomic += Math.Round((decimal)fila["castigomiccompra"], 5);
+        //            sumacastigouhml += Math.Round((decimal)fila["castigouhmlcompra"], 5);
+        //            sumacastigores += Math.Round((decimal)fila["castigorescompra"], 5);
+        //            sumacastigouni += Math.Round((decimal)fila["castigounicompra"], 5);
+        //            sumacastigosfi += Math.Round((decimal)fila["castigosficompra"], 5);
+        //        }
+        //    }
+        //    if (dgvadicionales.Rows.Count > 0)
+        //    {
+        //        dgvadicionales.Rows[0].Cells["Totaldeduccion"].Value = sumacastigopredio;
+        //        dgvadicionales.Rows[1].Cells["Totaldeduccion"].Value = sumacastigocamino;
+        //    }
+        //    nusubtotal.Value = sumaprecio;
+        //    nucastigomic.Value = sumacastigomic;
+        //    nucastigosfi.Value = sumacastigosfi;
+        //    nucastigostr.Value = sumacastigores;
+        //    nucastigouhml.Value = sumacastigouhml;
+        //    nucastigouni.Value = sumacastigouni;
+        //    dataGridViewDestino.Refresh();
+        //    nutotaldeduccion.Value = sumacastigomic + sumacastigores + sumacastigosfi + sumacastigouhml + sumacastigouni + sumacastigopredio + sumacastigocamino;
+        //    nutotal.Value = sumaprecio + sumacastigomic + sumacastigores + sumacastigosfi + sumacastigouhml + sumacastigouni + sumacastigopredio + sumacastigocamino;
+        //}
+        //OBTENER PRECIO DE PACA POR CLASE
+        //private decimal precioclase(string grado)
+        //{
+        //    decimal precioencontrado = 0.0m;
+        //    foreach (DataGridViewRow fila in dgvprecioclase.Rows)
+        //    {
+        //        if (fila.Cells["grade"].Value.ToString() == grado)
+        //        {
+        //            // Coincidencia encontrada, obtén el valor de la columna "Precio"
+        //            if (fila.Cells["precioclase"].Value != null && decimal.TryParse(fila.Cells["precioclase"].Value.ToString(), out precioencontrado))
+        //            {
+        //                // Valor de "Precio" válido encontrado, puedes romper el bucle
+        //                break;
+        //            }
+        //        }
+        //    }
+        //    return precioencontrado;
+        //}
     }
 }
