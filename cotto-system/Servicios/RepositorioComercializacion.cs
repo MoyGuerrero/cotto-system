@@ -216,5 +216,47 @@ namespace cotto_system.Servicios
         //    }
         //    return precioencontrado;
         //}
+        //DEVOLVER PACAS
+        //private void regresarpacas()
+        //{
+        //    dataGridViewDestino.EndEdit();
+        //    foreach (DataRowView rowView in destinoView)
+        //    {
+        //        bool seleccionado = (bool)rowView["seleccionar"];
+        //        if (seleccionado)
+        //        {
+        //            rowView["seleccionar"] = false;
+        //            rowView["kiloscompra"] = 0M;
+        //            rowView["librascompra"] = 0M;
+        //            rowView["quintalescompra"] = 0M;
+        //            rowView["preciocompra"] = 0M;
+        //            rowView["precioclasecompra"] = 0M;
+        //            rowView["castigomiccompra"] = 0M;
+        //            rowView["castigouhmlcompra"] = 0M;
+        //            rowView["castigorescompra"] = 0M;
+        //            rowView["castigounicompra"] = 0M;
+        //            rowView["castigosficompra"] = 0M;
+        //            DataRow rowDestino = rowView.Row;
+        //            dtorigen.ImportRow(rowDestino);
+        //            rowView.Delete();
+        //        }
+        //    }
+        //    destinoView.Table.AcceptChanges();
+        //    origenView = new DataView(dtorigen);
+        //    destinoView = new DataView(dtdestino);
+        //    origenView.Sort = "Baleid ASC";
+        //    destinoView.Sort = "Baleid ASC";
+        //    registrosCargadosDestino = 0;
+        //    registrosCargadosOrigen = 0;
+        //    dataGridViewOrigen.RowCount = Math.Min(RegistrosPorCarga, origenView.Count - registrosCargadosOrigen);
+        //    dataGridViewDestino.RowCount = Math.Min(RegistrosPorCarga, destinoView.Count - registrosCargadosDestino);
+        //    tspacasseleccionadas.Text = "";
+        //    tbcantidadsel2.Text = string.Empty;
+        //    dataGridViewOrigen.Refresh();
+        //    dataGridViewDestino.Refresh();
+        //    //nutotalkilos.Value = dtdestino.AsEnumerable().Sum(row => row.Field<decimal>("kilos"));
+        //    nutotalpacas.Value = dtdestino.Rows.Count;
+        //    //tabpacas.SelectedIndex = 1;
+        //}
     }
 }
