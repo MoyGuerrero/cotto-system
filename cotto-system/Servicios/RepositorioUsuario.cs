@@ -2,6 +2,7 @@
 using cotto_system.Modelos;
 using Dapper;
 using Microsoft.Data.SqlClient;
+using MySqlConnector;
 using System.Data;
 using System.Security.Cryptography;
 using System.Text;
@@ -38,9 +39,11 @@ namespace cotto_system.Servicios
         {
             try
             {
-                using var connection = new SqlConnection(connectionString);
+                //using var connection = new SqlConnection(connectionString); este es para Sql Server
+                using var connection = new MySqlConnection(connectionString); // Este es para MySql
 
-                return await connection.QueryFirstOrDefaultAsync<GetUsuario>("Sp_ConsultaUsuario", new { Usuario }, commandType: System.Data.CommandType.StoredProcedure);
+                //return await connection.QueryFirstOrDefaultAsync<GetUsuario>("Sp_ConsultaUsuario", new { Usuario }, commandType: System.Data.CommandType.StoredProcedure); Este es para SQl SERVER
+                return await connection.QueryFirstOrDefaultAsync<GetUsuario>("Sp_ConsultaUsuario", new { p_Usuario = Usuario }, commandType: System.Data.CommandType.StoredProcedure); //Este es para una base de prueba que se cargo de MYSQL
 
             }
             catch (Exception ex)

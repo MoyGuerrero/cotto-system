@@ -41,7 +41,7 @@ namespace cotto_system.Controllers
             }
         }
         [HttpPost]
-        [Route("agregar_calculocompra")]
+        [Route("agregar_calculocompra2")]
         public async Task<IActionResult> PostCalculoCompraDet(AddCalculocompradet addcalculocompradet)
         {
             try
