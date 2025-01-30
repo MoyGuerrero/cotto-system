@@ -15,7 +15,8 @@ namespace cotto_system.Servicios
 
         public RepositorioUsuario(IConfiguration configuration)
         {
-            connectionString = configuration.GetConnectionString("defaultConnection");
+            //connectionString = configuration.GetConnectionString("defaultConnection");
+            connectionString = Environment.GetEnvironmentVariable("defaultConnection");
         }
 
         public async Task AddUsuario(AddUsuario usuario)
